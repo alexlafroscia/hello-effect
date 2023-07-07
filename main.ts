@@ -1,8 +1,31 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { pipe } from "@effect/data/Function";
+import * as Duration from "@effect/data/Duration";
+import * as Effect from "@effect/io/Effect";
+import * as Logger from "@effect/io/Logger";
+import * as LoggerLevel from "@effect/io/Logger/Level";
+import * as Option from "@effect/data/Option";
 
-// Learn more at https://deno.land/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+import { input } from "./lib/stdin/read.ts";
+import { sigint } from "./lib/sigint.ts";
+
+const program = Effect.raceAll([
+  input("What is your name?"),
+
+  // 5 second timeout
+  pipe(
+    Effect.sleep(Duration.seconds(5)),
+    Effect.map(() => Option.some("Timeout")),
+  ),
+
+  // Cancel on `Ctrl-C`
+  pipe(
+    sigint(),
+    Effect.map(() => Option.some("Cancelled!")),
+  ),
+]);
+
+const answer = await Effect.runPromise(
+  Logger.withMinimumLogLevel(program, LoggerLevel.Debug),
+);
+
+console.log(`Done! ${answer}`);
