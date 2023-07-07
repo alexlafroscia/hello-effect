@@ -3,8 +3,7 @@
     "dev": "deno run --watch main.ts"
   },
   "imports": {
-    "@effect/data/": "npm:/@effect/data/",
-    "@effect/io/": "npm:/@effect/io@0.29.1/",
-    "@effect/test/": "npm:/@effect/test/"
+    "@effect/data/": "npm:/@effect/data@0.12.10/",
+    "@effect/io/": "npm:/@effect/io@0.29.1/"
   }
 }
