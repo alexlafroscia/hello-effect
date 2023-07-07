@@ -5,23 +5,25 @@ export function read<T>(
   readable: ReadableStream<T>,
 ): Effect.Effect<never, unknown, ReadableStreamDefaultReadResult<T>> {
   return pipe(
-    Effect.acquireUseRelease(
+    Effect.acquireUseRelease({
       // Acquire the `Reader` that we're going to use
-      Effect.sync(() => readable.getReader()),
+      acquire: Effect.sync(() => readable.getReader()),
       // Try to read from the `Reader`
-      (reader) =>
+      use: (reader) =>
         pipe(
-          Effect.logDebug("Starting to read"),
+          Effect.log("Starting to read", { level: "Debug" }),
           Effect.flatMap(() => Effect.tryPromise(() => reader.read())),
         ),
-      (reader) =>
+      release: (reader) =>
         pipe(
           // Effect.promise(() => reader.cancel()),
-          // Effect.tap(() => Effect.logDebug("Cancelled reader")),
+          // Effect.tap(() => Effect.log("Cancelled reader", { level: "Debug" })),
           Effect.sync(() => reader.releaseLock()),
-          Effect.tap(() => Effect.logDebug("Released lock from reader")),
+          Effect.tap(() =>
+            Effect.log("Released lock from reader", { level: "Debug" })
+          ),
         ),
-    ),
-    Effect.logSpan("readable-stream-read"),
+    }),
+    Effect.withSpan("readable-stream-read"),
   );
 }

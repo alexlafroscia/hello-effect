@@ -12,6 +12,6 @@ export function input(
     read(Deno.stdin.readable),
     Effect.map(({ value }) => Option.fromNullable(value)),
     Effect.map((value) => prepare(value)),
-    Effect.logSpan("input"),
+    Effect.withSpan("input"),
   );
 }

@@ -35,8 +35,8 @@ Deno.test("cancels the reader", async () => {
   const readable = readableStreamFromReader(reader);
 
   const logger = spy();
-  const SpyLogger = Logger.make((_, level, message) => {
-    logger(level, message);
+  const SpyLogger = Logger.make(({ logLevel, message }) => {
+    logger(logLevel, message);
   });
   const layer = Logger.replace(Logger.defaultLogger, SpyLogger);
 

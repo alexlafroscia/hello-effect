@@ -9,25 +9,29 @@ export function input(
 ): Effect.Effect<never, unknown, Option.Option<string>> {
   const buffer = new Uint8Array(1024);
 
-  const readFromStdin = Effect.acquireUseRelease(
-    Effect.sync(() => Deno.stdin.read(buffer)),
-    (input) =>
+  const readFromStdin = Effect.acquireUseRelease({
+    acquire: Effect.sync(() => Deno.stdin.read(buffer)),
+    use: (input) =>
       pipe(
-        Effect.logDebug("Starting read from stdin"),
+        Effect.log("Starting read from stdin", { level: "Debug" }),
         Effect.flatMap(() => Effect.tryPromise(() => input)),
-        Effect.tap(() => Effect.logDebug("Finished reading from stdin")),
+        Effect.tap(() =>
+          Effect.log("Finished reading from stdin", { level: "Debug" })
+        ),
       ),
-    () =>
+    release: () =>
       pipe(
-        Effect.logDebug("closing stdin..."),
+        Effect.log("closing stdin...", { level: "Debug" }),
         Effect.flatMap(() => Effect.sync(() => Deno.stdin.close())),
-        Effect.tap(() => Effect.logDebug("closed stdin")),
+        Effect.tap(() => Effect.log("closed stdin", { level: "Debug" })),
       ),
-  );
+  });
 
   return pipe(
     readFromStdin,
-    Effect.tap(() => Effect.logDebug("Finished releasing stdin")),
+    Effect.tap(() =>
+      Effect.log("Finished releasing stdin", { level: "Debug" })
+    ),
     Effect.map((result) => Option.fromNullable(result)),
     Effect.map((result) =>
       pipe(

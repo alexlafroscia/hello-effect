@@ -10,19 +10,19 @@ export function sigint(): Effect.Effect<never, unknown, "SIGINT"> {
     d.resolve();
   }
 
-  return Effect.acquireUseRelease(
-    pipe(
+  return Effect.acquireUseRelease({
+    acquire: pipe(
       Effect.sync(() => {
         Deno.addSignalListener("SIGINT", handleSignal);
       }),
-      Effect.tap(() => Effect.logDebug("listener added")),
+      Effect.tap(() => Effect.log("listener added", { level: "Debug" })),
     ),
-    () =>
+    use: () =>
       pipe(
         Effect.tryPromise(() => d),
         Effect.map(() => "SIGINT" as const),
       ),
-    () =>
+    release: () =>
       pipe(
         Effect.sync(() => {
           // Make sure the `Promise` is "closed" in case we didn't use it
@@ -30,7 +30,7 @@ export function sigint(): Effect.Effect<never, unknown, "SIGINT"> {
 
           Deno.removeSignalListener("SIGINT", handleSignal);
         }),
-        Effect.tap(() => Effect.logDebug("listener removed")),
+        Effect.tap(() => Effect.log("listener removed", { level: "Debug" })),
       ),
-  );
+  });
 }

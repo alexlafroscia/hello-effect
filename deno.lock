@@ -35,18 +35,18 @@
   },
   "npm": {
     "specifiers": {
-      "@effect/data@0.12.10": "@effect/data@0.12.10",
-      "@effect/io@0.29.1": "@effect/io@0.29.1"
+      "@effect/data@0.13.4": "@effect/data@0.13.4",
+      "@effect/io@0.31.1": "@effect/io@0.31.1"
     },
     "packages": {
-      "@effect/data@0.12.10": {
-        "integrity": "sha512-zIz/DgumH2LgGdr1Wc9ChET5JSG0k/G5kDc8rn4a6yIJ0v2d5rfnbRWIJO2fWmdFvc+128JyaBvYguIyz9JaAQ==",
+      "@effect/data@0.13.4": {
+        "integrity": "sha512-igrrN6e22dHA3JipY6Z1lXsPBDRWPbfAnUcPOGI3sf0BP/R3zG73CLiSqKl0ruJl98MVb9TaS3aqm8siqXR9QA==",
         "dependencies": {}
       },
-      "@effect/io@0.29.1": {
-        "integrity": "sha512-HOegsIPtRPqxM9wI3hkKStTp1bIc2LvLbwvEEPxD/bjIqCZz3dI8Eb1YTFSasAr1fPhnIqyO9o1TAIEE7raPUw==",
+      "@effect/io@0.31.1": {
+        "integrity": "sha512-fTxrwa7zr9bdGpr1f57UtSFWw9xgjCGIiG5kNuG+PGInJwANXqkTBa9izdcr3OP7mq5IzOtvPIFPIDE8r/ew5w==",
         "dependencies": {
-          "@effect/data": "@effect/data@0.12.10"
+          "@effect/data": "@effect/data@0.13.4"
         }
       }
     }

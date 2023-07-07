@@ -12,23 +12,25 @@ function loop(
   state: Chunk.Chunk<string>,
 ): Effect.Effect<never, unknown, Chunk.Chunk<string>> {
   return pipe(
-    Effect.logDebug("Starting loop"),
+    Effect.log("Starting loop", { level: "Debug" }),
     Effect.flatMap(() => pipe(input("Enter a name"), StringUtils.nonEmpty)),
     Effect.flatMap((value) =>
       pipe(
         value,
-        Option.match(
-          () =>
+        Option.match({
+          onNone: () =>
             pipe(
               Effect.succeed(state),
-              Effect.tap(() => Effect.logDebug("Got empty entry")),
+              Effect.tap(() =>
+                Effect.log("Got empty entry", { level: "Debug" })
+              ),
             ),
-          (value) =>
+          onSome: (value) =>
             pipe(
-              Effect.logDebug(`Adding state ${value}`),
+              Effect.log(`Adding state ${value}`, { level: "Debug" }),
               Effect.flatMap(() => loop(Chunk.append(state, value))),
             ),
-        ),
+        }),
       )
     ),
   );
