@@ -48,5 +48,5 @@ Deno.test("cancels the reader", async () => {
   );
 
   assertEquals(new TextDecoder().decode(result.value), "foobar");
-  assertSpyCalls(logger, 4);
+  assertSpyCalls(logger, 2);
 });
